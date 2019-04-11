@@ -1,2 +1,4 @@
-# awsserverlessapp
-AWS Serverless App
+# Serverless application deployment using codecommit and codebuild
+
+
+

@@ -1,0 +1,14 @@
+version: 0.1
+phases:
+  install:
+    commands:
+      - aws cloudformation package --template-file StudentsSAM.yaml --output-template-file serverless-output.yaml --s3-bucket bharathsdelivion
+      - zip -r index.zip index.js
+      - aws s3 cp serverless-output.yaml s3://bharathsdelivion/
+      - aws s3 cp studentswagger.json s3://bharathsdelivion/
+      - aws s3 cp index.zip s3://bharathsdelivion/
+  post_build:
+    commands:
+      - aws cloudformation deploy --template-file serverless-output.yaml --stack-name StudentsAppStack-Automated
+      - aws cloudformation wait stack-create-complete --stack-name StudentsAppStack-Automated
+      - aws dynamodb batch-write-item --request-items file://Students.json

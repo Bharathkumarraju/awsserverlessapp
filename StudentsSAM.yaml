@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: manage Students table
+Resources:
+  StudentInfoFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: StudentInfoFunction
+      Handler: index.handler
+      Runtime: nodejs8.10
+      CodeUri: s3://bharathsdelivion/index.zip
+      Description: manage Students table
+      MemorySize: 128
+      Timeout: 10
+      Role: 'arn:aws:iam::172586632398:role/LambdaDynamoAccess'
+      
+  Students:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      TableName : Students
+      AttributeDefinitions: 
+        - AttributeName: studentid
+          AttributeType: N
+      KeySchema: 
+        - AttributeName: studentid
+          KeyType: HASH
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+        
+
+  StudentApi: 
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionUri: s3://bharathsdelivion/studentswagger.json
+
+
+
